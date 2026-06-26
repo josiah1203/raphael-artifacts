@@ -50,6 +50,14 @@ def create_artifact(body: dict[str, Any]) -> dict[str, Any]:
     return {"id": aid, "kind": body.get("kind", "snapshot"), "created_at": now}
 
 
-@router.post("/ingest")
-def ingest_snapshot(body: dict[str, Any]) -> dict[str, str]:
+@router.post("/ingest/snapshot")
+def ingest_snapshot_route(body: dict[str, Any]) -> dict[str, str]:
     return create_artifact({"kind": "design_snapshot", "metadata": body, "module_id": body.get("module_id")})
+
+
+@router.get("/objects/{object_id}")
+def get_object(object_id: str) -> dict[str, Any]:
+    row = _conn.execute("SELECT id, module_id, kind, metadata, created_at FROM artifacts WHERE id = ?", (object_id,)).fetchone()
+    if not row:
+        raise HTTPException(404, detail="not_found")
+    return {"id": row[0], "module_id": row[1], "kind": row[2], "metadata": row[3], "created_at": row[4]}
