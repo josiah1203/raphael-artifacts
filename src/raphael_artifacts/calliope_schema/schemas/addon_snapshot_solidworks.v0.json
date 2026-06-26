@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calliope.dev/schemas/addon-snapshot/solidworks/v0",
+  "title": "SolidWorks Addon Snapshot",
+  "type": "object",
+  "required": ["document_id", "document_name", "captured_at_utc"],
+  "additionalProperties": true,
+  "properties": {
+    "document_id": {"type": "string", "minLength": 1},
+    "document_name": {"type": "string"},
+    "project_id": {"type": "string"},
+    "captured_at_utc": {"type": "string"},
+    "tool_identifier": {"type": "string", "const": "solidworks"},
+    "features": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "type": {"type": "string"}
+        }
+      }
+    }
+  }
+}

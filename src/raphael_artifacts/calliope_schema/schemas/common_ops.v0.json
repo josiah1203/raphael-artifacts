@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Calliope Common Operations",
+  "description": "Universal engineering operations schema",
+  "type": "object",
+  "properties": {
+    "ops": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "title": "component.move",
+            "type": "object",
+            "properties": {
+              "type": { "const": "component.move" },
+              "id": { "type": "string" },
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "z": { "type": "number" },
+              "rotation": { "type": "number" }
+            },
+            "required": ["type", "id", "x", "y", "z"]
+          },
+          {
+            "title": "net.rename",
+            "type": "object",
+            "properties": {
+              "type": { "const": "net.rename" },
+              "old_name": { "type": "string" },
+              "new_name": { "type": "string" }
+            },
+            "required": ["type", "old_name", "new_name"]
+          },
+          {
+            "title": "via.create",
+            "type": "object",
+            "properties": {
+              "type": { "const": "via.create" },
+              "at": {
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 2,
+                "maxItems": 3
+              },
+              "layers": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "drill_size": { "type": "number" }
+            },
+            "required": ["type", "at"]
+          },
+          {
+            "title": "parameter.update",
+            "type": "object",
+            "properties": {
+              "type": { "const": "parameter.update" },
+              "name": { "type": "string" },
+              "value": { "type": ["string", "number", "boolean"] },
+              "unit": { "type": "string" }
+            },
+            "required": ["type", "name", "value"]
+          }
+        ]
+      }
+    }
+  }
+}

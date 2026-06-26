@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://calliope.dev/schemas/event-envelope/v0",
+  "title": "Calliope Event Envelope",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "event_id",
+    "timestamp_utc",
+    "received_timestamp_utc",
+    "session_id",
+    "user_id",
+    "tenant_id",
+    "project_id",
+    "tool",
+    "event_type",
+    "fidelity",
+    "payload",
+    "checksum"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "string" },
+    "wire_schema_id": { "type": "integer" },
+    "corrects_event_id": { "type": "string", "format": "uuid" },
+    "event_id": { "type": "string", "format": "uuid" },
+    "timestamp_utc": { "type": "string", "format": "date-time" },
+    "received_timestamp_utc": { "type": "string", "format": "date-time" },
+    "session_id": { "type": "string", "format": "uuid" },
+    "causation_id": { "type": "string", "format": "uuid" },
+    "correlation_id": { "type": "string", "format": "uuid" },
+    "user_id": { "type": "string", "minLength": 1 },
+    "tenant_id": { "type": "string", "default": "local" },
+    "project_id": { "type": "string" },
+    "application": { "type": "string" },
+    "branch": { "type": "string" },
+    "tool": {
+      "type": "object",
+      "required": ["identifier", "version", "adapter_version"],
+      "additionalProperties": false,
+      "properties": {
+        "identifier": {
+          "type": "string",
+          "enum": [
+            "fusion360",
+            "onshape",
+            "kicad",
+            "github",
+            "gitlab",
+            "solidworks",
+            "altium",
+            "jira",
+            "ansys",
+            "comsol",
+            "migration",
+            "cadence",
+            "inventor",
+            "rhino",
+            "freecad"
+          ]
+        },
+        "version": { "type": "string" },
+        "adapter_version": { "type": "string" }
+      }
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "geometry.feature_created",
+        "geometry.feature_modified",
+        "geometry.feature_deleted",
+        "geometry.material_assigned",
+        "geometry.configuration_created",
+        "geometry.assembly_mate_added",
+        "electrical.footprint_added",
+        "electrical.footprint_modified",
+        "electrical.net_changed",
+        "software.commit_pushed",
+        "software.pull_request_opened",
+        "software.pull_request_merged",
+        "software.pull_request_closed",
+        "project.issue_created",
+        "project.issue_updated",
+        "project.issue_transitioned",
+        "simulation.setup_captured",
+        "simulation.result_captured"
+      ]
+    },
+    "fidelity": {
+      "type": "object",
+      "required": ["score", "coverage", "gaps", "metadata"],
+      "additionalProperties": false,
+      "properties": {
+        "score": { "type": "number", "minimum": 0, "maximum": 100 },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": { "type": "boolean" }
+        },
+        "gaps": { "type": "array", "items": { "type": "string" } },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "captured_fields": { "type": "array", "items": { "type": "string" } },
+            "inferred_fields": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "payload": { "type": "object" },
+    "checksum": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+  }
+}
