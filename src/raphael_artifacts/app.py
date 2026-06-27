@@ -2,16 +2,27 @@
 
 from __future__ import annotations
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
 from raphael_contracts.errors import ErrorResponse
+from raphael_artifacts.blob import ensure_buckets
 from raphael_artifacts.routes import router
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    ensure_buckets()
+    yield
+
 
 app = FastAPI(
     title="raphael-artifacts",
     description="Artifact CRUD, metadata, lifecycle, snapshots",
     version="0.1.0",
+    lifespan=lifespan,
     openapi_url="/v1/artifacts/openapi.json" if "/v1/artifacts" else "/openapi.json",
 )
 
